@@ -3,41 +3,366 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Site Launching Soon</title>
+    <title>Google</title>
     <style>
         body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            background: #292a2d;
+        }
+
+        /* Top right links */
+        .top-right {
+            position: absolute;
+            top: 32px;
+            right: 48px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            z-index: 1001;
+        }
+        .top-link {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-right: 8px;
+        }
+        .top-link:hover {
+            text-decoration: underline;
+        }
+        .top-icon {
+            width: 24px;
+            height: 24px;
+            opacity: 0.8;
+            margin-right: 8px;
+        }
+        .profile-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            object-fit: cover;
+        }
+
+        /* Google Search Page Styles */
+        .search-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            z-index: 1000;
+            transition: opacity 0.5s ease-out;
+        }
+        .google-logo {
+            width: 220px;
+            margin-bottom: 24px;
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border-radius: 32px;
+            box-shadow: 0 2px 8px rgba(60,64,67,.15);
+            width: 480px;
+            max-width: 90vw;
+            height: 44px;
+            padding: 0 16px;
+            margin-bottom: 32px;
+        }
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            opacity: 0.5;
+        }
+        .search-box {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            background: transparent;
+            color: #222;
+        }
+        .search-mic, .search-lens {
+            width: 20px;
+            height: 20px;
+            margin-left: 10px;
+            opacity: 0.7;
+            cursor: pointer;
+        }
+        .search-box::placeholder {
+            color: #757575;
+            opacity: 1;
+        }
+        /* Shortcuts row */
+        .shortcuts-row {
+            display: flex;
+            gap: 28px;
+            margin-top: 12px;
+        }
+        .shortcut {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.95rem;
+            opacity: 0.95;
+            width: 70px;
+        }
+        .shortcut-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 6px;
+            font-size: 1.3rem;
+        }
+        .shortcut-icon img {
+            width: 22px;
+            height: 22px;
+        }
+        .shortcut-label {
+            margin-top: 1px;
+        }
+        /* Customize Chrome button */
+        .customize-btn {
+            position: absolute;
+            bottom: 18px;
+            right: 24px;
+            background: #185abc;
+            color: #fff;
+            border: none;
+            border-radius: 24px;
+            padding: 7px 18px;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(60,64,67,.15);
+        }
+        .customize-btn:hover {
+            background: #174ea6;
+        }
+        .customize-btn .customize-icon {
+            width: 16px;
+            height: 16px;
+        }
+        /* Loading Screen Styles */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #292a2d;
             display: flex;
             justify-content: center;
             align-items: center;
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.5s ease-out;
+        }
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+        /* 404 Page Styles */
+        .error-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
             height: 100vh;
-            margin: 0;
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #ffffff;
+            color: #000000;
             text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            z-index: 998;
         }
-        h1 {
-            font-size: 3rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        .error-code {
+            font-size: 8rem;
+            font-weight: bold;
             margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            color: #000000;
         }
-        p {
+        .error-message {
+            font-size: 2rem;
+            margin: 20px 0;
+            opacity: 0.9;
+            color: #000000;
+        }
+        .error-description {
             font-size: 1.2rem;
-            margin-top: 10px;
+            margin: 10px 0;
             opacity: 0.8;
-        }
-        footer {
-            margin-top: 20px;
-            font-size: 1rem;
-            opacity: 0.7;
+            color: #000000;
         }
     </style>
 </head>
 <body>
-    <div>
-        <h1>Site Launching Soon</h1>
-        <p>Stay tuned for something amazing!</p>
-        <footer>© 2025 Guide Grad</footer>
+    <!-- Top right links -->
+    <div class="top-right">
+        <a href="#" class="top-link">Gmail</a>
+        <a href="#" class="top-link">Images</a>
+        <!-- Google Apps Grid Icon (inline SVG) -->
+        <span class="top-icon" style="display:inline-block;vertical-align:middle;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="4" cy="4" r="2"/>
+                <circle cx="12" cy="4" r="2"/>
+                <circle cx="20" cy="4" r="2"/>
+                <circle cx="4" cy="12" r="2"/>
+                <circle cx="12" cy="12" r="2"/>
+                <circle cx="20" cy="12" r="2"/>
+                <circle cx="4" cy="20" r="2"/>
+                <circle cx="12" cy="20" r="2"/>
+                <circle cx="20" cy="20" r="2"/>
+            </svg>
+        </span>
+        <img src="https://randomuser.me/api/portraits/men/32.jpg" class="profile-avatar" alt="Profile">
     </div>
+    <!-- Google Search Page -->
+    <div class="search-container">
+        <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google" class="google-logo">
+        <form id="search-form" onsubmit="return false;">
+            <div class="search-bar">
+                <!-- Google Search Icon (inline SVG) -->
+                <span class="search-icon" style="display:inline-block;vertical-align:middle;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="11" cy="11" r="7" stroke="#5f6368" stroke-width="2"/>
+                        <line x1="16.018" y1="16.485" x2="21" y2="21.5" stroke="#5f6368" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </span>
+                <input type="text" class="search-box" id="search-input" autocomplete="off" placeholder="Search Google or type a URL">
+                <!-- Google Mic Icon (inline SVG) -->
+                <span class="search-mic" style="display:inline-block;vertical-align:middle;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#4285f4" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="9" y="3" width="6" height="12" rx="3"/>
+                        <path d="M5 10v2a7 7 0 0 0 14 0v-2" stroke="#4285f4" stroke-width="2" fill="none"/>
+                        <line x1="12" y1="19" x2="12" y2="22" stroke="#4285f4" stroke-width="2"/>
+                        <line x1="8" y1="22" x2="16" y2="22" stroke="#4285f4" stroke-width="2"/>
+                    </svg>
+                </span>
+                <!-- Google Lens Icon (inline SVG) -->
+                <span class="search-lens" style="display:inline-block;vertical-align:middle;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="4" y="4" width="16" height="16" rx="5" stroke="#34a853" stroke-width="2"/>
+                        <circle cx="12" cy="12" r="3.5" stroke="#4285f4" stroke-width="2"/>
+                        <circle cx="12" cy="12" r="1.5" fill="#ea4335"/>
+                    </svg>
+                </span>
+            </div>
+        </form>
+        <div class="shortcuts-row">
+            <a href="#" class="shortcut">
+                <span class="shortcut-icon" style="background: radial-gradient(circle at 30% 110%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);">
+                    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram" style="filter: invert(1);">
+                </span>
+                <span class="shortcut-label">Instagram</span>
+            </a>
+            <a href="#" class="shortcut">
+                <span class="shortcut-icon" style="background: #1877f2;">
+                    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" style="filter: invert(1);">
+                </span>
+                <span class="shortcut-label">Facebook</span>
+            </a>
+            <a href="#" class="shortcut">
+                <span class="shortcut-icon" style="background: #25d366;">
+                    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" alt="Whatsapp" style="filter: invert(1);">
+                </span>
+                <span class="shortcut-label">Whatsapp</span>
+            </a>
+            <a href="#" class="shortcut">
+                <span class="shortcut-icon" style="background: #ff0000;">
+                    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg" alt="Youtube" style="filter: invert(1);">
+                </span>
+                <span class="shortcut-label">Youtube</span>
+            </a>
+            <a href="#" class="shortcut">
+                <span class="shortcut-icon" style="background: #1565c0;">
+                    <!-- Add shortcut icon (inline SVG) -->
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="11" y="4" width="2" height="16" rx="1"/>
+                        <rect x="4" y="11" width="16" height="2" rx="1"/>
+                    </svg>
+                </span>
+                <span class="shortcut-label">Add shortcut</span>
+            </a>
+        </div>
+    </div>
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+        <div class="loader"></div>
+    </div>
+    <!-- 404 Error Page -->
+    <div class="error-container">
+        <h1 class="error-code">404</h1>
+        <p class="error-message">Page Not Found</p>
+        <p class="error-description">Keep searching, or go back to the homepage.</p>
+    </div>
+    <!-- Customize Chrome Button -->
+    <button class="customize-btn">
+        <!-- Pencil Icon (inline SVG) -->
+        <span class="customize-icon" style="display:inline-block;vertical-align:middle;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 17.25V21h3.75l11.06-11.06-3.75-3.75L3 17.25z"/>
+                <path d="M20.71 7.04a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/>
+            </svg>
+        </span>
+        Customize Chrome
+    </button>
+    <script>
+        // Handle search form submission
+        document.getElementById('search-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            search();
+        });
+        // Handle search input enter key
+        document.getElementById('search-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                search();
+            }
+        });
+        function search() {
+            // Show loading screen
+            document.querySelector('.search-container').style.opacity = '0';
+            document.querySelector('.top-right').style.opacity = '0';
+            document.querySelector('.customize-btn').style.opacity = '0';
+            document.querySelector('.loading-screen').style.opacity = '1';
+            // After 2 seconds, show 404 page
+            setTimeout(function() {
+                document.querySelector('.loading-screen').style.opacity = '0';
+                document.querySelector('.error-container').style.opacity = '1';
+                document.querySelector('.error-container').style.transform = 'translateY(0)';
+            }, 2000);
+        }
+    </script>
 </body>
 </html>
